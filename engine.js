@@ -179,7 +179,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
           if (real_func_call[j1].name == real_func_names[j].name) {// If  function call name equals current function name -  Y U NO SPLIT CALLS TO NAMES
             for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {//// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 1 - CONDITIONAL LOOP 1: Loop through all return variables?
               var returnValue = (real_func_names[j].returns.variables[t] || "").replace("#THIS#", objName[0]);
-              real_func_call[j1].returns.variables.push(returnValue);
+              real_func_call[j1].returns.variables.push(returnValue);//PERMENENT
             }
           }
         }
@@ -199,14 +199,14 @@ function asignFunctionReturnValue() {//That's a weird sign to have
           for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3: Loop through all function call return variables
             if (real_func_names[j].returns.variables[t] != undefined) {// Why would you keep an undefined variable?
                var returnValue = real_func_names[j].returns.variables[t].replace("#THIS#", objName[0]);//lolwut
-               real_variable_var[i].value = returnValue;
+               real_variable_var[i].value = returnValue;//PERMENENT
 
               for (var i1 = 0; i1 < real_func_Scope.length; i1++) {// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 1: Loop through all scopes? GROUP THINGS
                 if (real_func_Scope[i1].name == real_func_names[j].name) {// If the name of the scope equals the function name...which you wouldn't need if they were grouped.
                   for (var i2 = 0; i2 < real_variable_var.length; i2++) {//LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 1: INNER LOOP 1: Loop through all non constant variables AGAIN
                     if (real_variable_var[i2].name == returnValue && real_variable_var[i2].line >= real_func_Scope[i1].startScope && real_variable_var[i2].line <= real_func_Scope[i1].endScope) {
-                      real_variable_var[i2].startScope = real_variable_var[i].startScope;
-                      real_variable_var[i2].endScope = real_variable_var[i].endScope;
+                      real_variable_var[i2].startScope = real_variable_var[i].startScope;//PERMENENT
+                      real_variable_var[i2].endScope = real_variable_var[i].endScope;//PERMENENT
                       break;
                     }
                   }
@@ -215,8 +215,8 @@ function asignFunctionReturnValue() {//That's a weird sign to have
               
               for (var k = 0; k < sink.length; k++) {//LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 2: Loop through all sinks
                 if (returnValue.indexOf(sink[k]) != -1) {
-                  sink.push(real_variable_var[i].name);//Pushing more sinks on top of sinks assuming previous sink matches essentially real_variable_var[ i ]
-                  real_variable_var[i].name = "#CHANGED_TO_SINK#";
+                  sink.push(real_variable_var[i].name);//Pushing more sinks on top of sinks assuming previous sink matches essentially real_variable_var[ i ] PERMENENT
+                  real_variable_var[i].name = "#CHANGED_TO_SINK#";//PERMENENT
                 }
               }
             }
@@ -233,9 +233,9 @@ function asignFunctionReturnValue() {//That's a weird sign to have
             var newFunction = clone(real_func_names[j]);// LOOKUP why would you need more functions?
             newFunction.name = name;
             //real_variable_var[i].name="#CHANGED_TO_FUNCTION#";
-            real_func_names.push(newFunction);
+            real_func_names.push(newFunction);//PERMENENT
             var newFunction2 = clone(real_variable_var[i]);
-            convertedFunction.push(newFunction2);
+            convertedFunction.push(newFunction2);//PERMENENT
             for (var k = 0; k < real_variable_var.length; k++) {
               var objName2 = real_variable_var[k].name.split("#CHANGED_TO_SINK#");
               var objName = objName2[0].split(".");
@@ -243,7 +243,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
                 var newFunction = clone(real_variable_var[k]);
                 objName[0] = name;
                 newFunction.name = objName.join(".");
-                real_variable_var.push(newFunction);
+                real_variable_var.push(newFunction);//PERMENENT
               }
             }
           }
@@ -257,10 +257,10 @@ function asignFunctionReturnValue() {//That's a weird sign to have
       if (val == sink[j] || aVal.indexOf(sink[j]) != -1) {// If the value of the variable happens to be a sink.
         var newFunction = clone(sink[j]);//STAHP
         newFunction = name;
-        real_variable_var[i].name = real_variable_var[i].name + "#CHANGED_TO_SINK#";
-        sink.push(newFunction);
+        real_variable_var[i].name = real_variable_var[i].name + "#CHANGED_TO_SINK#";//PERMENENT
+        sink.push(newFunction);//PERMENET
         if (sinkWithConstantParam.indexOf(sink[j]) != -1) {
-          sinkWithConstantParam.push(newFunction);
+          sinkWithConstantParam.push(newFunction);//PERMENENT
         }
       }
     }
@@ -272,16 +272,16 @@ function asignFunctionReturnValue() {//That's a weird sign to have
         if (real_func_names[j].returns.functions.length > 0) {
           var newFunction = clone(real_variable_var[i]);
           newFunction.name = real_func_names[j].returns.functions[0];
-          sink.push(real_variable_var[i].name);// LOOKUP how does this qualify as a sink?
+          sink.push(real_variable_var[i].name);// LOOKUP how does this qualify as a sink? PERMENENT
 
           for (var k = 0; k < real_func_names[j].returns.variables.length; k++) {//LOOP 2 - INNER LOOP 1 - INNER LOOP 1: Loop through all of the return values
             newFunction.arguments.variables.push(real_func_names[j].returns.variables[k]);
           }
-          real_variable_var.push(newFunction);
+          real_variable_var.push(newFunction);//PERMENENT
         }
       }
       if (real_variable_var[i].value == real_func_names[j].name) {// if the value of the variable matches the function name.
-        checkFunctionAsReturns(real_variable_var[i], real_func_names[j]);
+        checkFunctionAsReturns(real_variable_var[i], real_func_names[j]);//PERMENENT
       }
     }
   }
@@ -292,12 +292,12 @@ function asignFunctionReturnValue() {//That's a weird sign to have
         if (real_func_names[j].returns.functions.length > 0) {
           var newFunction = clone(real_func_call[i]);// More cloning
           newFunction.name = real_func_names[j].returns.functions[0];
-          sink.push(real_func_call[i].name);
+          sink.push(real_func_call[i].name);//PERMENENT
 
           for (var k = 0; k < real_func_names[j].returns.variables.length; k++) {
             newFunction.arguments.variables.push(real_func_names[j].returns.variables[k]);
           }
-          real_func_call.push(newFunction);
+          real_func_call.push(newFunction);//PERMENENT
         }
       }
     }
