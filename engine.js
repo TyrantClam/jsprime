@@ -162,22 +162,22 @@ function removePrototype() {
   }
 }
 
-function asignFunctionReturnValue() {
-  for (var i = 0; i < real_variable_var.length; i++) {
+function asignFunctionReturnValue() {//That's a weird sign to have
+  for (var i = 0; i < real_variable_var.length; i++) { //LOOP 1: Loop through all non constant variables
     var val = real_variable_var[i].value;
     var name = real_variable_var[i].name;
     var line = real_variable_var[i].line;
     var startScope = real_variable_var[i].startScope;
     var endScope = real_variable_var[i].endScope;
 
-    for (var j = 0; j < real_func_names.length; j++) {
+    for (var j = 0; j < real_func_names.length; j++) {//LOOP 1 - INNER LOOP 1: Loop through all function names
       var isDuplicateFunction = false;
 
-      if (real_variable_var[i].name == real_func_names[j].name) {
+      if (real_variable_var[i].name == real_func_names[j].name) {// If variable name equals function name
         var objName = real_variable_var[i].name.split(".");
-        for (var j1 = 0; j1 < real_func_call.length; j1++) {
-          if (real_func_call[j1].name == real_func_names[j].name) {
-            for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {
+        for (var j1 = 0; j1 < real_func_call.length; j1++) { // LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 1: Loop through all function calls
+          if (real_func_call[j1].name == real_func_names[j].name) {// If  function call name equals current function name -  Y U NO SPLIT CALLS TO NAMES
+            for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {//// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 1 - CONDITIONAL LOOP 1: Loop through all return variables?
               var returnValue = (real_func_names[j].returns.variables[t] || "").replace("#THIS#", objName[0]);
               real_func_call[j1].returns.variables.push(returnValue);
             }
@@ -185,25 +185,25 @@ function asignFunctionReturnValue() {
         }
       }
 
-      if (val == real_func_names[j].name) {
-        for (var j1 = 0; j1 < real_func_call.length; j1++) {
-          if (real_func_names[j].name == real_func_call[j1].name) {
-            if (real_func_call[j1].line == real_variable_var[i].line) {
+      if (val == real_func_names[j].name) {// If the value of the variable is equal to the current function name.
+        for (var j1 = 0; j1 < real_func_call.length; j1++) { // LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 2: Loop through all function calls...again
+          if (real_func_names[j].name == real_func_call[j1].name) {// Same as line 179
+            if (real_func_call[j1].line == real_variable_var[i].line) {// LOOKUP: Line they were found on?
               isDuplicateFunction = true;
             }
           }
         }
-        if (isDuplicateFunction == true) {
+        if (isDuplicateFunction == true) {// Why is separate? In fact, why is there a variable for this? It's only used one time.
           //var objName=real_variable_var[i].name.split(".");
           var objName = real_func_names[j].name.split(".");
-          for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {
-            if (real_func_names[j].returns.variables[t] != undefined) {
-               var returnValue = real_func_names[j].returns.variables[t].replace("#THIS#", objName[0]);
+          for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3: Loop through all function call return variables
+            if (real_func_names[j].returns.variables[t] != undefined) {// Why would you keep an undefined variable?
+               var returnValue = real_func_names[j].returns.variables[t].replace("#THIS#", objName[0]);//lolwut
                real_variable_var[i].value = returnValue;
 
-              for (var i1 = 0; i1 < real_func_Scope.length; i1++) {
-                if (real_func_Scope[i1].name == real_func_names[j].name) {
-                  for (var i2 = 0; i2 < real_variable_var.length; i2++) {
+              for (var i1 = 0; i1 < real_func_Scope.length; i1++) {// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 1: Loop through all scopes? GROUP THINGS
+                if (real_func_Scope[i1].name == real_func_names[j].name) {// If the name of the scope equals the function name...which you wouldn't need if they were grouped.
+                  for (var i2 = 0; i2 < real_variable_var.length; i2++) {//LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 1: INNER LOOP 1: Loop through all non constant variables AGAIN
                     if (real_variable_var[i2].name == returnValue && real_variable_var[i2].line >= real_func_Scope[i1].startScope && real_variable_var[i2].line <= real_func_Scope[i1].endScope) {
                       real_variable_var[i2].startScope = real_variable_var[i].startScope;
                       real_variable_var[i2].endScope = real_variable_var[i].endScope;
@@ -213,9 +213,9 @@ function asignFunctionReturnValue() {
                 }
               }
               
-              for (var k = 0; k < sink.length; k++) {
+              for (var k = 0; k < sink.length; k++) {//LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 2: Loop through all sinks
                 if (returnValue.indexOf(sink[k]) != -1) {
-                  sink.push(real_variable_var[i].name);
+                  sink.push(real_variable_var[i].name);//Pushing more sinks on top of sinks assuming previous sink matches essentially real_variable_var[ i ]
                   real_variable_var[i].name = "#CHANGED_TO_SINK#";
                 }
               }
@@ -223,14 +223,14 @@ function asignFunctionReturnValue() {
           }
         } else {
           var isSink = false;
-          for (var k = 0; k < sink.length; k++) {
+          for (var k = 0; k < sink.length; k++) {// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 4: Do the same thing as before but this time its not a duplicate
             if (real_variable_var[i].name.indexOf(sink[k]) != -1) {
               isSink = true;
               break;
             }
           }
-          if (isSink == false && isDuplicateFunction == false) {
-            var newFunction = clone(real_func_names[j]);
+          if (isSink == false && isDuplicateFunction == false) {//It couldn't be in this block if it was a duplicate.
+            var newFunction = clone(real_func_names[j]);// LOOKUP why would you need more functions?
             newFunction.name = name;
             //real_variable_var[i].name="#CHANGED_TO_FUNCTION#";
             real_func_names.push(newFunction);
@@ -252,10 +252,10 @@ function asignFunctionReturnValue() {
       }
     }
 
-    for (var j = 0; j < sink.length; j++) {
+    for (var j = 0; j < sink.length; j++) {//LOOP 1 - INNER LOOP 2: Finally. Now we are looping through all the sinks that were found. 
       aVal = val.split(".");
-      if (val == sink[j] || aVal.indexOf(sink[j]) != -1) {
-        var newFunction = clone(sink[j]);
+      if (val == sink[j] || aVal.indexOf(sink[j]) != -1) {// If the value of the variable happens to be a sink.
+        var newFunction = clone(sink[j]);//STAHP
         newFunction = name;
         real_variable_var[i].name = real_variable_var[i].name + "#CHANGED_TO_SINK#";
         sink.push(newFunction);
@@ -266,31 +266,31 @@ function asignFunctionReturnValue() {
     }
   }
 
-  for (var i = 0; i < real_variable_var.length; i++) {
-    for (var j = 0; j < real_func_names.length; j++) {
-      if (real_variable_var[i].name == real_func_names[j].name) {
+  for (var i = 0; i < real_variable_var.length; i++) {//LOOP 2: Loop through it again now that we changed everything.
+    for (var j = 0; j < real_func_names.length; j++) {//LOOP 2 - INNER LOOP 1:  Loop through all function names
+      if (real_variable_var[i].name == real_func_names[j].name) {//pretty sure we've done all of this before.
         if (real_func_names[j].returns.functions.length > 0) {
           var newFunction = clone(real_variable_var[i]);
           newFunction.name = real_func_names[j].returns.functions[0];
-          sink.push(real_variable_var[i].name);
+          sink.push(real_variable_var[i].name);// LOOKUP how does this qualify as a sink?
 
-          for (var k = 0; k < real_func_names[j].returns.variables.length; k++) {
+          for (var k = 0; k < real_func_names[j].returns.variables.length; k++) {//LOOP 2 - INNER LOOP 1 - INNER LOOP 1: Loop through all of the return values
             newFunction.arguments.variables.push(real_func_names[j].returns.variables[k]);
           }
           real_variable_var.push(newFunction);
         }
       }
-      if (real_variable_var[i].value == real_func_names[j].name) {
+      if (real_variable_var[i].value == real_func_names[j].name) {// if the value of the variable matches the function name.
         checkFunctionAsReturns(real_variable_var[i], real_func_names[j]);
       }
     }
   }
 
-  for (var i = 0; i < real_func_call.length; i++) {
-    for (var j = 0; j < real_func_names.length; j++) {
-      if (real_func_call[i].name == real_func_names[j].name) {
+  for (var i = 0; i < real_func_call.length; i++) {//LOOP 3: Loop through all function calls
+    for (var j = 0; j < real_func_names.length; j++) {//LOOP 3 - INNER LOOP 1: THE REVENGE: Nested loops ftw
+      if (real_func_call[i].name == real_func_names[j].name) {// If the call is equal to the name which is totally unnecessary. GROUPINGS
         if (real_func_names[j].returns.functions.length > 0) {
-          var newFunction = clone(real_func_call[i]);
+          var newFunction = clone(real_func_call[i]);// More cloning
           newFunction.name = real_func_names[j].returns.functions[0];
           sink.push(real_func_call[i].name);
 
@@ -1093,7 +1093,7 @@ function getVariables(node) {
         real_variable_var.push(data);
       }
     }
-  } else if (node.type == "VariableDeclarator" && node.id) {
+  } else if (node.type == "VariableDeclarator" && node.id) { //GOTO real_variable_var PUSH
     if (node.id.name) {
       var data = {
         name: '',
