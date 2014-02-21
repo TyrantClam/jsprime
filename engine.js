@@ -163,6 +163,7 @@ function removePrototype() {
 }
 
 function asignFunctionReturnValue() {//That's a weird sign to have
+//TODO 15 actions need mapping.
   for (var i = 0; i < real_variable_var.length; i++) { //LOOP 1: Loop through all non constant variables
     var val = real_variable_var[i].value;
     var name = real_variable_var[i].name;
@@ -179,7 +180,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
           if (real_func_call[j1].name == real_func_names[j].name) {// If  function call name equals current function name -  Y U NO SPLIT CALLS TO NAMES
             for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {//// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 1 - CONDITIONAL LOOP 1: Loop through all return variables?
               var returnValue = (real_func_names[j].returns.variables[t] || "").replace("#THIS#", objName[0]);
-              real_func_call[j1].returns.variables.push(returnValue);//PERMENENT
+              real_func_call[j1].returns.variables.push(returnValue);//PERMENENT if variable var, call, and names are all equal
             }
           }
         }
@@ -199,14 +200,14 @@ function asignFunctionReturnValue() {//That's a weird sign to have
           for (var t = 0; t < real_func_names[j].returns.variables.length; t++) {// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3: Loop through all function call return variables
             if (real_func_names[j].returns.variables[t] != undefined) {// Why would you keep an undefined variable?
                var returnValue = real_func_names[j].returns.variables[t].replace("#THIS#", objName[0]);//lolwut
-               real_variable_var[i].value = returnValue;//PERMENENT
+               real_variable_var[i].value = returnValue;//PERMENENT If not undefined, variable value equals func name, call name, and variable line is same as call line
 
               for (var i1 = 0; i1 < real_func_Scope.length; i1++) {// LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 1: Loop through all scopes? GROUP THINGS
                 if (real_func_Scope[i1].name == real_func_names[j].name) {// If the name of the scope equals the function name...which you wouldn't need if they were grouped.
                   for (var i2 = 0; i2 < real_variable_var.length; i2++) {//LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 1: INNER LOOP 1: Loop through all non constant variables AGAIN
                     if (real_variable_var[i2].name == returnValue && real_variable_var[i2].line >= real_func_Scope[i1].startScope && real_variable_var[i2].line <= real_func_Scope[i1].endScope) {
-                      real_variable_var[i2].startScope = real_variable_var[i].startScope;//PERMENENT
-                      real_variable_var[i2].endScope = real_variable_var[i].endScope;//PERMENENT
+                      real_variable_var[i2].startScope = real_variable_var[i].startScope;//PERMENENT If not undefined, variable value equals func name, call name, and variable line is same as call line and scope name equals func name
+                      real_variable_var[i2].endScope = real_variable_var[i].endScope;//PERMENENT and a million other things relating to scope and var
                       break;
                     }
                   }
@@ -216,7 +217,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
               for (var k = 0; k < sink.length; k++) {//LOOP 1 - INNER LOOP 1 - CONDITIONAL LOOP 3 - INNER LOOP 2: Loop through all sinks
                 if (returnValue.indexOf(sink[k]) != -1) {
                   sink.push(real_variable_var[i].name);//Pushing more sinks on top of sinks assuming previous sink matches essentially real_variable_var[ i ] PERMENENT
-                  real_variable_var[i].name = "#CHANGED_TO_SINK#";//PERMENENT
+                  real_variable_var[i].name = "#CHANGED_TO_SINK#";//PERMENENT  If not undefined, variable value equals func name, call name, and variable line is same as call line and var name is sink
                 }
               }
             }
@@ -233,9 +234,9 @@ function asignFunctionReturnValue() {//That's a weird sign to have
             var newFunction = clone(real_func_names[j]);// LOOKUP why would you need more functions?
             newFunction.name = name;
             //real_variable_var[i].name="#CHANGED_TO_FUNCTION#";
-            real_func_names.push(newFunction);//PERMENENT
+            real_func_names.push(newFunction);//PERMENENT if variable value equals func name but does not match a sink
             var newFunction2 = clone(real_variable_var[i]);
-            convertedFunction.push(newFunction2);//PERMENENT
+            convertedFunction.push(newFunction2);//PERMENENT ^
             for (var k = 0; k < real_variable_var.length; k++) {
               var objName2 = real_variable_var[k].name.split("#CHANGED_TO_SINK#");
               var objName = objName2[0].split(".");
@@ -243,7 +244,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
                 var newFunction = clone(real_variable_var[k]);
                 objName[0] = name;
                 newFunction.name = objName.join(".");
-                real_variable_var.push(newFunction);//PERMENENT
+                real_variable_var.push(newFunction);//PERMENENT if variable value equals func name and if var does not match sink and matches name again 
               }
             }
           }
@@ -257,7 +258,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
       if (val == sink[j] || aVal.indexOf(sink[j]) != -1) {// If the value of the variable happens to be a sink.
         var newFunction = clone(sink[j]);//STAHP
         newFunction = name;
-        real_variable_var[i].name = real_variable_var[i].name + "#CHANGED_TO_SINK#";//PERMENENT
+        real_variable_var[i].name = real_variable_var[i].name + "#CHANGED_TO_SINK#";//PERMENENT If the value of the variable happens to be a sink.
         sink.push(newFunction);//PERMENET
         if (sinkWithConstantParam.indexOf(sink[j]) != -1) {
           sinkWithConstantParam.push(newFunction);//PERMENENT
@@ -272,7 +273,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
         if (real_func_names[j].returns.functions.length > 0) {
           var newFunction = clone(real_variable_var[i]);
           newFunction.name = real_func_names[j].returns.functions[0];
-          sink.push(real_variable_var[i].name);// LOOKUP how does this qualify as a sink? PERMENENT
+          sink.push(real_variable_var[i].name);// LOOKUP how does this qualify as a sink? PERMENENT if variable name equals function name and it returns functions
 
           for (var k = 0; k < real_func_names[j].returns.variables.length; k++) {//LOOP 2 - INNER LOOP 1 - INNER LOOP 1: Loop through all of the return values
             newFunction.arguments.variables.push(real_func_names[j].returns.variables[k]);
@@ -281,7 +282,7 @@ function asignFunctionReturnValue() {//That's a weird sign to have
         }
       }
       if (real_variable_var[i].value == real_func_names[j].name) {// if the value of the variable matches the function name.
-        checkFunctionAsReturns(real_variable_var[i], real_func_names[j]);//PERMENENT
+        checkFunctionAsReturns(real_variable_var[i], real_func_names[j]);//PERMENENT 
       }
     }
   }
@@ -1993,6 +1994,36 @@ function getFunctions(node) {
 
     }
   }
+}
+
+function strcmp(s1, s2) { s1 < s1 ? -1 : s1 > s2 ? 1 : 0;}
+
+function binaryIndexOf(searchElement) {
+	'use strict';
+
+	var minIndex = 0;
+	var maxIndex = this.length - 1;
+	var currentIndex;
+	var currentElement;
+	var resultIndex;
+
+	while (minIndex <= maxIndex) {
+		resultIndex = currentIndex = (minIndex + maxIndex) / 2 | 0;
+		currentElement = this[currentIndex].name;
+
+		var result = strcmp(currentElement,searchElement);
+		if (result < 0) {
+			minIndex = currentIndex + 1;
+		}
+		else if (result > 0) {
+			maxIndex = currentIndex - 1;
+		}
+		else {
+			return currentIndex;
+		}
+	}
+
+	return ~maxIndex;
 }
 
 var reportOutput = '<!DOCTYPE html><html dir="ltr" lang="en-US"><head id="reportHead"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>JSPrime Scan Report</title><link href="scripts/lib/report/1.css" media="all" rel="stylesheet"><link href="scripts/lib/report/2.css" media="all" rel="stylesheet"><link rel="stylesheet" href="scripts/lib/custom.css"></head><body><header><div id="logo"><img src="resources/jsp_logo.png"></div></header><div id="title">static <b>javascript</b> analyzer</div><div id="output"><div class="report" data-validateurl="" id="addon-validator-suite"><div class="results"><div class="result" id="suite-results-tier-3" style=""><div class="result-header"><h4 id="extension-tests">Scan Report</h4><div id="result-summary" class="result-summary" style="visibility: visible;"></div></div><div class="tier-results tests-passed-warnings" data-tier="3" id="resultRows"></div></div></div></div></div></body></html>';
